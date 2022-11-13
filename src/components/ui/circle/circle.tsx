@@ -47,12 +47,13 @@ export const Circle: React.FC<CircleProps> = ({
       <p
         className={`text text_type_input text_color_input mt-4 ${styles.absolute} ${styles.index}`}
       >
-        {index?.toString()}
+        {/* {index ? index + "" : false} */}
+        {index ? String(index) : false}
       </p>
       <div
         className={`text text_type_input text_color_input mt-4 ${
           styles.absolute
-        } ${index?.toString() ? styles.tail60 : styles.tail30} ${
+        } ${(index ? String(index) : false) ? styles.tail60 : styles.tail30} ${
           styles[typeof tail === "string" ? "string" : "element"]
         }`}
       >
