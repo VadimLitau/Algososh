@@ -1,53 +1,107 @@
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
+import useForm from "../../hooks/useForm";
 import style from "./string.module.css";
+import { ElementStates } from "../../types/element-states";
 
 export const StringComponent: React.FC = () => {
-  const reverseString = (str: string) => {
-    const item: string[] = str.split("");
-    const nums: any[] = str.split("");
-    const size: number = item.length;
-    let start = 0;
-    let end = nums.length - 1;
-    let curr = 0;
-
-    const swap = (
-      arr: string[],
-      firstIndex: number,
-      secondIndex: number
-    ): void => {
-      const temp = arr[firstIndex];
-      arr[firstIndex] = arr[secondIndex];
-      arr[secondIndex] = temp;
-    };
-    while (curr < (item.length - 1) / 2) {
-      swap(item, start + curr, end - curr);
-      console.log(item);
-
-      curr++;
+  const [stringArray, setStringArray] = useState<string[]>([]);
+  const [values, handleChange] = useForm();
+  const [count, setCount] = useState({ start: -1, end: 99, loader: false });
+  const stringHandler = (e: FormEvent) => {
+    e.preventDefault();
+    reverseString(values.string);
+    setCount({ ...count, start: -1, end: 12, loader: true });
+  };
+  const swap = (
+    arr: string[],
+    firstIndex: number,
+    secondIndex: number
+  ): void => {
+    const temp = arr[firstIndex];
+    arr[firstIndex] = arr[secondIndex];
+    arr[secondIndex] = temp;
+    setCount({
+      ...count,
+      start: firstIndex + 1,
+      end: secondIndex - 1,
+      loader: true,
+    });
+    if (firstIndex + 1 === secondIndex || firstIndex === secondIndex) {
+      setCount({
+        ...count,
+        start: firstIndex + secondIndex + 1,
+        end: 12,
+        loader: false,
+      });
     }
-    return item;
   };
 
-  const string: string[] = reverseString("hello");
-  console.log(string);
+  const reverseString = (str: string) => {
+    //setStringArray([]);
+    const item: string[] = str.split("");
+    const nums: any[] = str.split("");
+    let start = 0;
+    let end = nums.length - 1;
+    let curr = 1;
+    //console.log(start, end);
+    while (start <= end) {
+      //console.log(start, end);
+      setStringArray([...item]);
+      (function(start, end, curr) {
+        setTimeout(function() {
+          swap(item, start, end);
+          setStringArray([...item]);
+          //console.log(count.start);
+        }, 1000 * curr);
+      })(start++, end--, curr++);
+    }
+  };
+  //const string: string[] = reverseString("1234567890");
+  // const string: string[] = ["1", "2", "3"];
+  // console.log(string);
+  //console.log(stringArray);
 
   return (
     <SolutionLayout title="Строка">
-      <section className={style.content}>
+      <form className={style.content} onSubmit={stringHandler}>
         <div className={style.input}>
-          <Input></Input>
+          <Input
+            type="text"
+            maxLength={11}
+            name="string"
+            value={values.string || ""}
+            onChange={handleChange}
+          ></Input>
           <p className={style.inputSubtext}>Максимум — 11 символов</p>
         </div>
-        <Button text={"Развернуть"} />
+        <Button text={"Развернуть"} type="submit" isLoader={count.loader} />
+      </form>
+      <section className={style.string}>
+        {stringArray.map((i, index: number) => {
+          // console.log(index);
+
+          console.log(count.start, count.end);
+
+          return (
+            <Circle
+              letter={i}
+              key={index}
+              extraClass={"pr-12"}
+              state={
+                index === count.start || index === count.end
+                  ? ElementStates.Changing
+                  : index > count.start && index < count.end
+                  ? ElementStates.Default
+                  : ElementStates.Modified
+              }
+            />
+          );
+        })}
       </section>
-      {string.map((i, index: number) => {
-        console.log(index);
-        return <Circle letter={i} key={index} />;
-      })}
     </SolutionLayout>
   );
 };
