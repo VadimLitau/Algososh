@@ -3,9 +3,11 @@ import React, { ChangeEvent, SetStateAction, useState } from "react";
 const useForm = () => {
   interface IUseForm {
     string: string;
+    fibonacci: number;
   }
   const [state, setState] = useState<IUseForm & any>({
     string: "",
+    fibonacci: 0,
   });
 
   const handleChange = (
@@ -20,4 +22,3 @@ const useForm = () => {
   return [state, handleChange];
 };
 export default useForm;
-//с формами я обязательно разберусь =)
