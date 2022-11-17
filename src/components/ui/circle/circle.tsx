@@ -48,7 +48,8 @@ export const Circle: React.FC<CircleProps> = ({
         className={`text text_type_input text_color_input mt-4 ${styles.absolute} ${styles.index}`}
       >
         {/* {index ? index + "" : false} */}
-        {index ? String(index) : false}
+        {/* пришлось немного изменить приведение числа к строке, т.к правило которое использовалось выше, давало ошибку */}
+        {index === 0 ? 0 : index ? String(index) : false}
       </p>
       <div
         className={`text text_type_input text_color_input mt-4 ${
