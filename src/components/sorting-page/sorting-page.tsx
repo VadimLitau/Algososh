@@ -86,18 +86,19 @@ export const SortingPage: React.FC = () => {
   const choiceDescendens = (arr: number[]) => {
     const { length } = arr;
     for (let i = 0; i < length - 1; i++) {
-      let maxInd = i; //2
-      for (let j = i + 1; j < length; j++) {
-        //j=3
-        if (arr[j] > arr[maxInd]) {
-          //4>0
-          maxInd = j;
+      setTimeout(() => {
+        let minInd = i; //2
+        for (let j = i + 1; j < length; j++) {
+          //j=3
+          if (arr[j] > arr[minInd]) {
+            //4>0
+            minInd = j;
+          }
         }
-      }
-      if (maxInd > i) swap(arr, i, maxInd); //1>1
+        if (minInd > i) swap(arr, i, minInd); //1>1
+        setNewArr([...arr]);
+      }, 1000 * i);
     }
-    console.log(arr);
-    //setNewArr(arr);
     return arr;
   };
 
@@ -105,21 +106,27 @@ export const SortingPage: React.FC = () => {
   const choiceAscendens = (arr: number[]) => {
     const { length } = arr;
     for (let i = 0; i < length - 1; i++) {
-      let maxInd = i; //2
-      for (let j = i + 1; j < length; j++) {
-        //j=3
-        if (arr[j] < arr[maxInd]) {
-          //4>0
-          maxInd = j;
+      setTimeout(() => {
+        let maxInd = i; //2
+        //setNewArr([...arr]);
+
+        for (let j = i + 1; j < length; j++) {
+          //j=3
+          if (arr[j] < arr[maxInd]) {
+            //4>0
+            maxInd = j;
+          }
         }
-      }
-      if (maxInd > i) swap(arr, i, maxInd); //1>1
+
+        if (maxInd > i) swap(arr, i, maxInd); //1>1
+        setNewArr([...arr]);
+      }, 500 * i);
     }
     return arr;
   };
-  if (typeSorting.choice) {
-    asOrDes.ascendens ? choiceDescendens(newArr) : choiceAscendens(newArr);
-  }
+  // if (typeSorting.choice) {
+  //   asOrDes.ascendens ? choiceDescendens(newArr) : choiceAscendens(newArr);
+  // }
   //console.log(choiceDescendens(newArr));
   return (
     <SolutionLayout title="Сортировка массива">
@@ -144,7 +151,8 @@ export const SortingPage: React.FC = () => {
           text="По возрастанию"
           extraClass={style.button}
           onClick={() => {
-            setAsOrDes({ ascendens: false, descendens: true });
+            choiceAscendens(newArr);
+            //setAsOrDes({ ascendens: false, descendens: true });
           }}
         ></Button>
         <Button
@@ -152,7 +160,8 @@ export const SortingPage: React.FC = () => {
           text="По убыванию"
           extraClass={style.buttonDown}
           onClick={() => {
-            setAsOrDes({ ascendens: true, descendens: false });
+            choiceDescendens(newArr);
+            //setAsOrDes({ ascendens: true, descendens: false });
           }}
         ></Button>
         <Button
