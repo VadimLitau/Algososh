@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { RadioInput } from "../ui/radio-input/radio-input";
 import { Button } from "../ui/button/button";
@@ -9,13 +9,29 @@ interface IRadioInput {
   choice: boolean;
   bubble: boolean;
 }
-
 export const SortingPage: React.FC = () => {
   const [radioInput, setRadioInput] = useState<IRadioInput>({
     choice: true,
     bubble: false,
   });
   const [newArr, setNewArr] = useState<number[]>([]);
+  const [typeSorting, setTypeSorting] = useState<IRadioInput>({
+    choice: true,
+    bubble: false,
+  });
+  const [asOrDes, setAsOrDes] = useState({
+    ascendens: false,
+    descendens: true,
+  });
+  const handleRandomArr = () => {
+    getArr();
+    //choiceDescendens(newArr);
+    console.log(newArr);
+  };
+  // useEffect(() => {
+  //   choiceDescendens(newArr);
+  //   console.log(newArr);
+  // }, []);
 
   const editRadioInput = (item: string) => {
     if (item === "choice") {
@@ -48,15 +64,63 @@ export const SortingPage: React.FC = () => {
     for (var i = 0; i < limit; i++) {
       arr[i] = rand(min, max);
     }
-    setNewArr(arr);
+    setNewArr([...arr]);
     return;
   }
 
-  const getRandomArr = () => {
-    getArr();
-    console.log(newArr);
+  // const getRandomArr = () => {
+  //   getArr();
+  //   console.log(newArr);
+  // };
+  const swap = (
+    arr: number[],
+    firstIndex: number,
+    secondIndex: number
+  ): void => {
+    const temp = arr[firstIndex];
+    arr[firstIndex] = arr[secondIndex];
+    arr[secondIndex] = temp;
   };
 
+  //выбором по убыванию
+  const choiceDescendens = (arr: number[]) => {
+    const { length } = arr;
+    for (let i = 0; i < length - 1; i++) {
+      let maxInd = i; //2
+      for (let j = i + 1; j < length; j++) {
+        //j=3
+        if (arr[j] > arr[maxInd]) {
+          //4>0
+          maxInd = j;
+        }
+      }
+      if (maxInd > i) swap(arr, i, maxInd); //1>1
+    }
+    console.log(arr);
+    //setNewArr(arr);
+    return arr;
+  };
+
+  //выбором по возрастанию
+  const choiceAscendens = (arr: number[]) => {
+    const { length } = arr;
+    for (let i = 0; i < length - 1; i++) {
+      let maxInd = i; //2
+      for (let j = i + 1; j < length; j++) {
+        //j=3
+        if (arr[j] < arr[maxInd]) {
+          //4>0
+          maxInd = j;
+        }
+      }
+      if (maxInd > i) swap(arr, i, maxInd); //1>1
+    }
+    return arr;
+  };
+  if (typeSorting.choice) {
+    asOrDes.ascendens ? choiceDescendens(newArr) : choiceAscendens(newArr);
+  }
+  //console.log(choiceDescendens(newArr));
   return (
     <SolutionLayout title="Сортировка массива">
       <section className={style.control}>
@@ -79,17 +143,23 @@ export const SortingPage: React.FC = () => {
           sorting={Direction.Ascending}
           text="По возрастанию"
           extraClass={style.button}
+          onClick={() => {
+            setAsOrDes({ ascendens: false, descendens: true });
+          }}
         ></Button>
         <Button
           sorting={Direction.Descending}
           text="По убыванию"
           extraClass={style.buttonDown}
+          onClick={() => {
+            setAsOrDes({ ascendens: true, descendens: false });
+          }}
         ></Button>
         <Button
           text="Новый массив"
           extraClass={style.button}
           onClick={() => {
-            getRandomArr();
+            handleRandomArr();
           }}
         ></Button>
       </section>
