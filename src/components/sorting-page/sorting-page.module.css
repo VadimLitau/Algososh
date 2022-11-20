@@ -1,0 +1,33 @@
+.button {
+    width: 205px;
+}
+
+.buttonDown {
+    margin-right: 80px;
+    margin-left: 12px;
+    width: 205px;
+}
+
+.control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.radio {
+    margin-right: 52px;
+    margin-left: 40px;
+}
+
+.columns {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.columnsWrap {
+    margin-top: 38px;
+    height: 368px;
+    display: flex;
+    justify-content: center;
+}
