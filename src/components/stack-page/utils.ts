@@ -14,5 +14,9 @@ export class Stack<T> {
   clear = () => {
     this.container = [];
   };
-  getSize = () => this.container.length;
+  getItems = () => {
+    const arr = [];
+    for (let i of this.container) arr.push(i);
+    return arr;
+  };
 }

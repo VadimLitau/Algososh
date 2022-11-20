@@ -4,10 +4,12 @@ const useForm = () => {
   interface IUseForm {
     string: string;
     fibonacci: number;
+    stack: number;
   }
   const [state, setState] = useState<IUseForm & any>({
     string: "",
     fibonacci: 0,
+    stack: 0,
   });
 
   const handleChange = (
