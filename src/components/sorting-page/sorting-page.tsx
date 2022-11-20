@@ -5,16 +5,22 @@ import { Button } from "../ui/button/button";
 import style from "./sorting-page.module.css";
 import { Direction } from "../../types/direction";
 import { Column } from "../ui/column/column";
+import { ElementStates } from "../../types/element-states";
+interface INewArr {
+  item: number;
+  state?: ElementStates;
+}
 interface IRadioInput {
   choice: boolean;
   bubble: boolean;
 }
 export const SortingPage: React.FC = () => {
+  const [btnLoader, setBtnLoader] = useState<boolean>(false);
   const [radioInput, setRadioInput] = useState<IRadioInput>({
     choice: true,
     bubble: false,
   });
-  const [newArr, setNewArr] = useState<number[]>([]);
+  const [newArr, setNewArr] = useState<INewArr[]>([]);
   const [typeSorting, setTypeSorting] = useState<IRadioInput>({
     choice: true,
     bubble: false,
@@ -25,14 +31,12 @@ export const SortingPage: React.FC = () => {
   });
   const handleRandomArr = () => {
     getArr();
-    //choiceDescendens(newArr);
-    console.log(newArr);
   };
-  // useEffect(() => {
-  //   choiceDescendens(newArr);
-  //   console.log(newArr);
-  // }, []);
-
+  useEffect(() => {
+    getArr();
+  }, []);
+  const delay = (time: number) =>
+    new Promise((resolve) => setTimeout(resolve, time));
   const editRadioInput = (item: string) => {
     if (item === "choice") {
       radioInput.choice
@@ -46,34 +50,25 @@ export const SortingPage: React.FC = () => {
     }
   };
 
-  function rand(min: any, max: any) {
-    if (max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    } else {
-      return Math.floor(Math.random() * (min + 1));
-    }
-  }
+  const getArr = () => {
+    const getRandomArbitrary = (min: number, max: number) => {
+      return Math.floor(Math.random() * (max - min) + min);
+    };
 
-  // функция генерации массива заполненного случайными числами
-  function getArr() {
-    let limit = Math.floor(Math.random() * (17 - 3 + 1)) + 3;
-    let min = 0;
-    let max = 100;
-    let arr = new Array(limit);
+    const n = getRandomArbitrary(3, 18);
+    const randomArr = Array(n)
+      .fill(null)
+      .map(() => Math.floor(Math.random() * 100));
 
-    for (var i = 0; i < limit; i++) {
-      arr[i] = rand(min, max);
-    }
-    setNewArr([...arr]);
-    return;
-  }
+    const arr = randomArr.map((item) => ({
+      item,
+      state: ElementStates.Default,
+    }));
 
-  // const getRandomArr = () => {
-  //   getArr();
-  //   console.log(newArr);
-  // };
+    setNewArr(arr);
+  };
   const swap = (
-    arr: number[],
+    arr: INewArr[],
     firstIndex: number,
     secondIndex: number
   ): void => {
@@ -83,51 +78,112 @@ export const SortingPage: React.FC = () => {
   };
 
   //выбором по убыванию
-  const choiceDescendens = (arr: number[]) => {
-    const { length } = arr;
-    for (let i = 0; i < length - 1; i++) {
-      setTimeout(() => {
-        let minInd = i; //2
-        for (let j = i + 1; j < length; j++) {
-          //j=3
-          if (arr[j] > arr[minInd]) {
-            //4>0
-            minInd = j;
-          }
-        }
-        if (minInd > i) swap(arr, i, minInd); //1>1
-        setNewArr([...arr]);
-      }, 1000 * i);
+  const choiceDescendens = async (arr: INewArr[]) => {
+    setBtnLoader(true);
+
+    if (arr[0].state !== ElementStates.Default) {
+      arr.forEach((item) => (item.state = ElementStates.Default));
     }
-    return arr;
+    for (let i = 0; i < arr.length - 1; i++) {
+      let minInd = i;
+      let maxInd = i;
+      for (let j = i + 1; j < arr.length; j++) {
+        arr[i].state = ElementStates.Changing;
+        arr[j].state = ElementStates.Changing;
+        setNewArr([...arr]);
+        await delay(500);
+        if (arr[maxInd].item < arr[j].item) {
+          maxInd = j;
+        }
+        arr[j].state = ElementStates.Default;
+        setNewArr([...arr]);
+      }
+      swap(arr, i, maxInd);
+      arr[i].state = ElementStates.Modified;
+    }
+    arr[arr.length - 1].state = ElementStates.Modified;
+    setNewArr([...arr]);
+    setBtnLoader(false);
   };
 
   //выбором по возрастанию
-  const choiceAscendens = (arr: number[]) => {
-    const { length } = arr;
-    for (let i = 0; i < length - 1; i++) {
-      setTimeout(() => {
-        let maxInd = i; //2
-        //setNewArr([...arr]);
+  const choiceAscendens = async (arr: INewArr[]) => {
+    setBtnLoader(true);
 
-        for (let j = i + 1; j < length; j++) {
-          //j=3
-          if (arr[j] < arr[maxInd]) {
-            //4>0
-            maxInd = j;
-          }
-        }
-
-        if (maxInd > i) swap(arr, i, maxInd); //1>1
-        setNewArr([...arr]);
-      }, 500 * i);
+    if (arr[0].state !== ElementStates.Default) {
+      arr.forEach((item) => (item.state = ElementStates.Default));
     }
-    return arr;
+    for (let i = 0; i < arr.length - 1; i++) {
+      let minInd = i;
+      let maxInd = i;
+      for (let j = i + 1; j < arr.length; j++) {
+        arr[i].state = ElementStates.Changing;
+        arr[j].state = ElementStates.Changing;
+        setNewArr([...arr]);
+        await delay(500);
+        if (arr[minInd].item > arr[j].item) {
+          minInd = j;
+        }
+        arr[j].state = ElementStates.Default;
+        setNewArr([...arr]);
+      }
+      swap(arr, i, minInd);
+      arr[i].state = ElementStates.Modified;
+    }
+    arr[arr.length - 1].state = ElementStates.Modified;
+    setNewArr([...arr]);
+    setBtnLoader(false);
   };
-  // if (typeSorting.choice) {
-  //   asOrDes.ascendens ? choiceDescendens(newArr) : choiceAscendens(newArr);
-  // }
-  //console.log(choiceDescendens(newArr));
+  //пузырьком по увеличению
+  const bubbleSortAsc = async (arr: INewArr[]) => {
+    setBtnLoader(true);
+
+    if (arr[0].state !== ElementStates.Default) {
+      arr.forEach((item) => (item.state = ElementStates.Default));
+    }
+
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr.length - i - 1; j++) {
+        arr[j].state = ElementStates.Changing;
+        arr[j + 1].state = ElementStates.Changing;
+        setNewArr([...arr]);
+        await delay(500);
+        if (arr[j].item > arr[j + 1].item) {
+          swap(arr, j, j + 1);
+        }
+        arr[j].state = ElementStates.Default;
+      }
+      arr[arr.length - i - 1].state = ElementStates.Modified;
+    }
+    setNewArr([...arr]);
+    setBtnLoader(false);
+  };
+
+  //пузырьком по уменьшение
+  const bubbleSortDesc = async (arr: INewArr[]) => {
+    setBtnLoader(true);
+
+    if (arr[0].state !== ElementStates.Default) {
+      arr.forEach((item) => (item.state = ElementStates.Default));
+    }
+
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr.length - i - 1; j++) {
+        arr[j].state = ElementStates.Changing;
+        arr[j + 1].state = ElementStates.Changing;
+        setNewArr([...arr]);
+        await delay(500);
+        if (arr[j].item < arr[j + 1].item) {
+          swap(arr, j, j + 1);
+        }
+        arr[j].state = ElementStates.Default;
+      }
+      arr[arr.length - i - 1].state = ElementStates.Modified;
+    }
+    setNewArr([...arr]);
+    setBtnLoader(false);
+  };
+
   return (
     <SolutionLayout title="Сортировка массива">
       <section className={style.control}>
@@ -150,21 +206,24 @@ export const SortingPage: React.FC = () => {
           sorting={Direction.Ascending}
           text="По возрастанию"
           extraClass={style.button}
+          isLoader={btnLoader}
           onClick={() => {
-            choiceAscendens(newArr);
-            //setAsOrDes({ ascendens: false, descendens: true });
+            radioInput.choice ? choiceAscendens(newArr) : bubbleSortAsc(newArr);
           }}
         ></Button>
         <Button
           sorting={Direction.Descending}
           text="По убыванию"
           extraClass={style.buttonDown}
+          isLoader={btnLoader}
           onClick={() => {
-            choiceDescendens(newArr);
-            //setAsOrDes({ ascendens: true, descendens: false });
+            radioInput.choice
+              ? choiceDescendens(newArr)
+              : bubbleSortDesc(newArr);
           }}
         ></Button>
         <Button
+          isLoader={btnLoader}
           text="Новый массив"
           extraClass={style.button}
           onClick={() => {
@@ -174,9 +233,14 @@ export const SortingPage: React.FC = () => {
       </section>
       <section className={style.columnsWrap}>
         <div className={style.columns}>
-          {newArr.map((item: any, index: number) => {
+          {newArr.map((item, index) => {
             return (
-              <Column index={item} key={index} extraClass="mr-3 ml-3"></Column>
+              <Column
+                index={item.item}
+                key={index}
+                extraClass="mr-3 ml-3"
+                state={item.state}
+              ></Column>
             );
           })}
         </div>
