@@ -5,11 +5,13 @@ const useForm = () => {
     string: string;
     fibonacci: number;
     stack: number;
+    queue: number | string;
   }
   const [state, setState] = useState<IUseForm & any>({
     string: "",
     fibonacci: 0,
     stack: 0,
+    queue: 0,
   });
 
   const handleChange = (
