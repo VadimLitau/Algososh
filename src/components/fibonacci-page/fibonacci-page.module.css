@@ -21,9 +21,10 @@
 .homeForCircles {
     margin: 0 auto;
     width: 994px;
-    height: 268px;
+    max-height: 268px;
     margin-top: 48px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    row-gap: 60px;
 }
