@@ -6,6 +6,7 @@ import { Circle } from "../ui/circle/circle";
 import useForm from "../../hooks/useForm";
 import style from "./string.module.css";
 import { ElementStates } from "../../types/element-states";
+import { TIMER } from "./utils";
 
 export const StringComponent: React.FC = () => {
   const [stringArray, setStringArray] = useState<string[]>([]);
@@ -41,29 +42,21 @@ export const StringComponent: React.FC = () => {
   };
 
   const reverseString = (str: string) => {
-    //setStringArray([]);
     const item: string[] = str.split("");
     const nums: any[] = str.split("");
     let start = 0;
     let end = nums.length - 1;
     let curr = 1;
-    //console.log(start, end);
     while (start <= end) {
-      //console.log(start, end);
       setStringArray([...item]);
-      (function(start, end, curr) {
-        setTimeout(function() {
+      (function (start, end, curr) {
+        setTimeout(function () {
           swap(item, start, end);
           setStringArray([...item]);
-          //console.log(count.start);
-        }, 1000 * curr);
+        }, TIMER * curr);
       })(start++, end--, curr++);
     }
   };
-  //const string: string[] = reverseString("1234567890");
-  // const string: string[] = ["1", "2", "3"];
-  // console.log(string);
-  //console.log(stringArray);
 
   return (
     <SolutionLayout title="Строка">
@@ -78,14 +71,15 @@ export const StringComponent: React.FC = () => {
           ></Input>
           <p className={style.inputSubtext}>Максимум — 11 символов</p>
         </div>
-        <Button text={"Развернуть"} type="submit" isLoader={count.loader} />
+        <Button
+          text={"Развернуть"}
+          type="submit"
+          isLoader={count.loader}
+          disabled={!(values.string.length > 0)}
+        />
       </form>
       <section className={style.string}>
         {stringArray.map((i, index: number) => {
-          // console.log(index);
-
-          console.log(count.start, count.end);
-
           return (
             <Circle
               letter={i}

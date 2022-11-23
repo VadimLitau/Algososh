@@ -7,10 +7,15 @@ import { Stack } from "./utils";
 import { ElementStates } from "../../types/element-states";
 import useForm from "../../hooks/useForm";
 import { Circle } from "../ui/circle/circle";
+import { IButtonColor } from "./types";
+import { DEF_COLOR } from "./types";
 
 export const StackPage: React.FC = () => {
   const [state, setState] = useState<string[]>([]);
-  const [color, setColor] = useState<boolean>(false);
+  const [color, setColor] = useState<IButtonColor>({
+    add: false,
+    del: false,
+  });
   const [values, handleChange] = useForm();
   const stack = React.useMemo(() => {
     return new Stack<string>();
@@ -18,19 +23,19 @@ export const StackPage: React.FC = () => {
   const addItem = (e: FormEvent) => {
     e.preventDefault();
     stack.push(values.stack);
-    setColor(true);
+    setColor({ ...color, add: true });
     setState([...stack.getItems()]);
     setTimeout(() => {
-      setColor(false);
+      setColor(DEF_COLOR);
     }, 1000);
     values.stack = "";
   };
   const deleteItem = () => {
-    setColor(true);
+    setColor({ ...color, del: true });
     setTimeout(() => {
       stack.pop();
       setState([...stack.getItems()]);
-      setColor(false);
+      setColor(DEF_COLOR);
     }, 1000);
   };
   const clearStack = () => {
@@ -55,6 +60,7 @@ export const StackPage: React.FC = () => {
             extraClass="ml-6"
             type="submit"
             disabled={values.stack ? false : true}
+            isLoader={color.add}
           ></Button>
           <Button
             text={"Удалить"}
@@ -63,6 +69,7 @@ export const StackPage: React.FC = () => {
               deleteItem();
             }}
             disabled={state.length ? false : true}
+            isLoader={color.del}
           ></Button>
           <Button
             text={"Очистить"}

@@ -5,6 +5,7 @@ import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import useForm from "../../hooks/useForm";
 import style from "./fibonacci-page.module.css";
+import { getFibonacciNumbers, MAX_VALUE, MIN_VALUE, TIMER } from "./utils";
 
 export const FibonacciPage: React.FC = () => {
   const [state, setState] = useState<any[]>([]);
@@ -12,32 +13,20 @@ export const FibonacciPage: React.FC = () => {
   const [loader, setLoader] = useState(false);
   const fibonacciHandler = (e: FormEvent) => {
     e.preventDefault();
-    fibonacciSequence(values.fibonacci);
+    const fibNum: any = getFibonacciNumbers(values.fibonacci);
+    getFibonacciVisual(fibNum);
     setLoader(true);
+    values.fibonacci = "";
   };
-  let element: void[] = [];
-  const fibonacciSequence = (item: number) => {
-    let series: any = new Array(item);
-    element = series;
-    for (let i = 0; i <= item; i++) {
-      setTimeout(() => {
-        if (i === 0) {
-          series[0] = 1;
-          setState([...series]);
-        } else if (i === 1) {
-          series[1] = 1;
-          setState([...series]);
-        } else {
-          series[i] = series[i - 1] + series[i - 2];
-          setState([...series]);
-        }
-        if (i > item - 1) {
-          console.log(i);
 
-          setLoader(false);
-          return;
-        }
-      }, 500 * i);
+  const getFibonacciVisual = (item: []) => {
+    const series: any = [];
+    for (let i = 0; i < item.length; i++) {
+      setTimeout(() => {
+        i === item.length - 1 ? setLoader(false) : null;
+        series.push(item[i]);
+        setState([...series]);
+      }, TIMER * i);
     }
   };
 
@@ -50,15 +39,18 @@ export const FibonacciPage: React.FC = () => {
             onChange={handleChange}
             type="text"
             name="fibonacci"
+            isLimitText
+            maxLength={MAX_VALUE}
           ></Input>
-          <p className={style.inputSubtext}>Максимальное число — 19</p>
         </div>
         <Button
           text={"Рассчитать"}
           linkedList="small"
           isLoader={loader}
           type="submit"
-          disabled={values.fibonacci < 1 || values.fibonacci > 19}
+          disabled={
+            values.fibonacci < MIN_VALUE || values.fibonacci > MAX_VALUE
+          }
         />
       </form>
       <section className={style.homeForCircles}>

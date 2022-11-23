@@ -19,7 +19,6 @@
     min-height: 238px;
     display: flex;
     justify-content: center;
-    align-items: baseline;
     align-content: center;
     flex-wrap: wrap;
     gap: 16px;

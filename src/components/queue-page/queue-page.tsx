@@ -20,7 +20,6 @@ export const QueuePage: React.FC = () => {
 
   let head = queue.head;
   let tail = queue.tail;
-  console.log(head === tail);
 
   const addItem = (e: FormEvent) => {
     setColor({ head: false, tail: true });
