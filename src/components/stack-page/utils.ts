@@ -20,3 +20,5 @@ export class Stack<T> {
     return arr;
   };
 }
+
+export const TIMER = 1000;

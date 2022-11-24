@@ -42,3 +42,9 @@ export class Queue<T> {
     this.length = 0;
   };
 }
+
+export const TIMER = 500;
+
+export const QUEUE_DEF_ELEM = 7;
+
+export const INPUT_MAX_VALUE = 4;

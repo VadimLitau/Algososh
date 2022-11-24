@@ -24,7 +24,7 @@ interface ILinkedList<T> {
 export class LinkedList<T> implements ILinkedList<T> {
   private head: Node<T> | null;
   private size: number;
-  constructor(defaultValues?: T[] | undefined) {
+  constructor(defaultValues?: T[]) {
     this.head = null;
     this.size = 0;
     if (defaultValues) {
@@ -34,7 +34,6 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   insertAt(element: T, index: number) {
     if (index < 0 || index >= this.size) {
-      console.log("Enter a valid index");
       return;
     }
     const node = new Node(element);
@@ -150,3 +149,5 @@ export const DEF_LOADER_STATE = {
 };
 
 export const TIME = 1000;
+
+export const INPUT_MAX_VALUE = 4;

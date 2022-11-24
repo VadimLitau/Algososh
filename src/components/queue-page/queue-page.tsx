@@ -1,6 +1,6 @@
 import React, { useMemo, useState, FormEvent } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Queue } from "./utils";
+import { Queue, TIMER, QUEUE_DEF_ELEM, INPUT_MAX_VALUE } from "./utils";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -13,7 +13,7 @@ export const QueuePage: React.FC = () => {
   const [color, setColor] = useState({ head: false, tail: false });
   const [values, handleChange] = useForm();
   const queue = useMemo(() => {
-    const queue = new Queue<string>(7);
+    const queue = new Queue<string>(QUEUE_DEF_ELEM);
     setState([...queue.getItems()]);
     return queue;
   }, []);
@@ -28,7 +28,7 @@ export const QueuePage: React.FC = () => {
     setState([...queue.getItems()]);
     setTimeout(() => {
       setColor({ head: false, tail: false });
-    }, 500);
+    }, TIMER);
     values.queue = "";
   };
   const deleteItem = () => {
@@ -37,7 +37,7 @@ export const QueuePage: React.FC = () => {
       queue.dequeue();
       setState([...queue.getItems()]);
       setColor({ head: false, tail: false });
-    }, 500);
+    }, TIMER);
   };
   const clearQueue = () => {
     queue.clear();
@@ -51,7 +51,7 @@ export const QueuePage: React.FC = () => {
           <span className={style.input}>
             <Input
               isLimitText
-              maxLength={4}
+              maxLength={INPUT_MAX_VALUE}
               name="queue"
               onChange={handleChange}
               value={values.queue || ""}
@@ -72,6 +72,7 @@ export const QueuePage: React.FC = () => {
             disabled={head === tail ? true : false}
           ></Button>
           <Button
+            disabled={queue.isEmpty()}
             text={"Очистить"}
             onClick={() => {
               clearQueue();

@@ -6,11 +6,14 @@ import { Circle } from "../ui/circle/circle";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { ElementStates } from "../../types/element-states";
 import { ArrowIcon } from "../ui/icons/arrow-icon";
-import { LinkedList } from "./utils";
-import { ILinkedItem } from "./utils";
 import { IButtonLoaderState } from "./types";
-import { DEF_LOADER_STATE } from "./utils";
-import { TIME } from "./utils";
+import {
+  DEF_LOADER_STATE,
+  TIME,
+  INPUT_MAX_VALUE,
+  LinkedList,
+  ILinkedItem,
+} from "./utils";
 
 export const ListPage: React.FC = () => {
   const [state, setState] = useState<ILinkedItem[]>([]);
@@ -317,7 +320,7 @@ export const ListPage: React.FC = () => {
           <Input
             type="text"
             placeholder="Введите значение"
-            maxLength={4}
+            maxLength={INPUT_MAX_VALUE}
             isLimitText={true}
             extraClass={style.input}
             onChange={changeValue}
@@ -344,7 +347,7 @@ export const ListPage: React.FC = () => {
             text="Удалить из head"
             type="button"
             onClick={deleteInHead}
-            disabled={loaderState.removeFromHead}
+            disabled={loaderState.removeFromHead || state.length === 0}
             isLoader={loaderState.removeFromHeadLoading}
           />
           <Button
@@ -352,7 +355,7 @@ export const ListPage: React.FC = () => {
             text="Удалить из tail"
             type="button"
             onClick={deleteInTail}
-            disabled={loaderState.removeFromTail}
+            disabled={loaderState.removeFromTail || state.length === 0}
             isLoader={loaderState.removeFromTailLoading}
           />
         </fieldset>

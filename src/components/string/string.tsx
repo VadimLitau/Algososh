@@ -6,16 +6,20 @@ import { Circle } from "../ui/circle/circle";
 import useForm from "../../hooks/useForm";
 import style from "./string.module.css";
 import { ElementStates } from "../../types/element-states";
-import { TIMER } from "./utils";
+import { TIMER, MIN_VALUE, MAX_VALUE, INPUT_LENGTH } from "./utils";
 
 export const StringComponent: React.FC = () => {
   const [stringArray, setStringArray] = useState<string[]>([]);
   const [values, handleChange] = useForm();
-  const [count, setCount] = useState({ start: -1, end: 99, loader: false });
+  const [count, setCount] = useState({
+    start: MIN_VALUE,
+    end: MAX_VALUE,
+    loader: false,
+  });
   const stringHandler = (e: FormEvent) => {
     e.preventDefault();
     reverseString(values.string);
-    setCount({ ...count, start: -1, end: 12, loader: true });
+    setCount({ ...count, start: MIN_VALUE, end: MAX_VALUE, loader: true });
   };
   const swap = (
     arr: string[],
@@ -35,7 +39,7 @@ export const StringComponent: React.FC = () => {
       setCount({
         ...count,
         start: firstIndex + secondIndex + 1,
-        end: 12,
+        end: MAX_VALUE,
         loader: false,
       });
     }
@@ -64,12 +68,12 @@ export const StringComponent: React.FC = () => {
         <div className={style.input}>
           <Input
             type="text"
-            maxLength={11}
+            isLimitText
+            maxLength={INPUT_LENGTH}
             name="string"
             value={values.string || ""}
             onChange={handleChange}
           ></Input>
-          <p className={style.inputSubtext}>Максимум — 11 символов</p>
         </div>
         <Button
           text={"Развернуть"}
