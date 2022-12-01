@@ -6,22 +6,28 @@ Object {
   "baseElement": <body>
     <div>
       <button
-        class="text text_type_button text_color_primary button undefined false "
+        class="text text_type_button text_color_primary button undefined loader "
+        disabled=""
         type="button"
       >
-        <p
-          class="text undefined"
+        <img
+          alt="Загрузка."
+          class="loader_icon"
+          src="loader.svg"
         />
       </button>
     </div>
   </body>,
   "container": <div>
     <button
-      class="text text_type_button text_color_primary button undefined false "
+      class="text text_type_button text_color_primary button undefined loader "
+      disabled=""
       type="button"
     >
-      <p
-        class="text undefined"
+      <img
+        alt="Загрузка."
+        class="loader_icon"
+        src="loader.svg"
       />
     </button>
   </div>,

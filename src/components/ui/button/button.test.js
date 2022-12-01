@@ -18,7 +18,7 @@ describe("Тестирование компонента Button", () => {
   });
 
   it("Кнопка в процессе загрузки", () => {
-    const item = render(<Button loader={true} />);
+    const item = render(<Button isLoader={true} />);
     expect(item).toMatchSnapshot();
   });
 
