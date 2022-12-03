@@ -6,7 +6,14 @@ import { Circle } from "../ui/circle/circle";
 import useForm from "../../hooks/useForm";
 import style from "./string.module.css";
 import { ElementStates } from "../../types/element-states";
-import { TIMER, MIN_VALUE, MAX_VALUE, INPUT_LENGTH } from "./utils";
+import {
+  TIMER,
+  MIN_VALUE,
+  MAX_VALUE,
+  INPUT_LENGTH,
+  reverseStrings,
+} from "./utils";
+// Переписал логику разворота строки, чтобы тестировать именно разворот, а не тестировать визуальное отображение половины компонента)
 
 export const StringComponent: React.FC = () => {
   const [stringArray, setStringArray] = useState<string[]>([]);
@@ -16,6 +23,7 @@ export const StringComponent: React.FC = () => {
     end: MAX_VALUE,
     loader: false,
   });
+
   const stringHandler = (e: FormEvent) => {
     e.preventDefault();
     reverseString(values.string);
@@ -24,11 +32,11 @@ export const StringComponent: React.FC = () => {
   const swap = (
     arr: string[],
     firstIndex: number,
-    secondIndex: number
+    secondIndex: number,
+    arr2: string
   ): void => {
-    const temp = arr[firstIndex];
-    arr[firstIndex] = arr[secondIndex];
-    arr[secondIndex] = temp;
+    arr[firstIndex] = arr2[firstIndex];
+    arr[secondIndex] = arr2[secondIndex];
     setCount({
       ...count,
       start: firstIndex + 1,
@@ -47,15 +55,15 @@ export const StringComponent: React.FC = () => {
 
   const reverseString = (str: string) => {
     const item: string[] = str.split("");
-    const nums: any[] = str.split("");
+    const reverseStr: string = reverseStrings(str);
     let start = 0;
-    let end = nums.length - 1;
+    let end = item.length - 1;
     let curr = 1;
     while (start <= end) {
       setStringArray([...item]);
       (function (start, end, curr) {
         setTimeout(function () {
-          swap(item, start, end);
+          swap(item, start, end, reverseStr);
           setStringArray([...item]);
         }, TIMER * curr);
       })(start++, end--, curr++);
