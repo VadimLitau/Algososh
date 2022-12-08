@@ -7,12 +7,33 @@ import { Direction } from "../../types/direction";
 import { Column } from "../ui/column/column";
 import { ElementStates } from "../../types/element-states";
 import { IBtnLoader, INewArr, IRadioInput } from "./types";
-import { swap, TIMER } from "./utils";
-import { DEF_BTN_LOADER } from "./utils";
-import { delay } from "./utils";
-import { getArr } from "./utils";
+import {
+  TIMER,
+  bubbleSortAscGenerator,
+  bubbleSortDescGenerator,
+  choiceDescendensGenerator,
+  choiceAscendensGenerator,
+  DEF_BTN_LOADER,
+  delay,
+  getArr,
+} from "./utils";
 
 export const SortingPage: React.FC = () => {
+  const first2 = [
+    { item: 13, state: "default" },
+    { item: 14, state: "default" },
+    { item: 15, state: "default" },
+  ];
+  const second2 = [
+    { item: 13, state: "default" },
+    { item: 14, state: "default" },
+    { item: 15, state: "default" },
+  ];
+
+  const isEqual = JSON.stringify(first2) === JSON.stringify(second2);
+  console.log(isEqual);
+  // console.log(isEquals);
+
   const [buttonLoader, setButtonLoader] = useState<IBtnLoader>({
     ascendens: false,
     descendens: false,
@@ -61,28 +82,21 @@ export const SortingPage: React.FC = () => {
     if (arr[0].state !== ElementStates.Default) {
       arr.forEach((item) => (item.state = ElementStates.Default));
     }
+
+    let generator = choiceDescendensGenerator(arr);
     for (let i = 0; i < arr.length - 1; i++) {
-      let maxInd = i;
       for (let j = i + 1; j < arr.length; j++) {
-        arr[i].state = ElementStates.Changing;
-        arr[j].state = ElementStates.Changing;
-        setNewArr([...arr]);
+        setNewArr(generator.next().value);
         await delay(TIMER);
-        if (arr[maxInd].item < arr[j].item) {
-          maxInd = j;
-        }
-        arr[j].state = ElementStates.Default;
-        setNewArr([...arr]);
+        setNewArr(generator.next().value);
       }
-      swap(arr, i, maxInd);
-      arr[i].state = ElementStates.Modified;
     }
-    arr[arr.length - 1].state = ElementStates.Modified;
-    setNewArr([...arr]);
+    setNewArr(generator.next().value);
     setButtonLoader(DEF_BTN_LOADER);
   };
 
   //выбором по возрастанию
+
   const choiceAscendens = async (arr: INewArr[]) => {
     setButtonLoader({
       ...buttonLoader,
@@ -94,26 +108,19 @@ export const SortingPage: React.FC = () => {
     if (arr[0].state !== ElementStates.Default) {
       arr.forEach((item) => (item.state = ElementStates.Default));
     }
+
+    let generator = choiceAscendensGenerator(arr);
     for (let i = 0; i < arr.length - 1; i++) {
-      let minInd = i;
       for (let j = i + 1; j < arr.length; j++) {
-        arr[i].state = ElementStates.Changing;
-        arr[j].state = ElementStates.Changing;
-        setNewArr([...arr]);
+        setNewArr(generator.next().value);
         await delay(TIMER);
-        if (arr[minInd].item > arr[j].item) {
-          minInd = j;
-        }
-        arr[j].state = ElementStates.Default;
-        setNewArr([...arr]);
+        setNewArr(generator.next().value);
       }
-      swap(arr, i, minInd);
-      arr[i].state = ElementStates.Modified;
     }
-    arr[arr.length - 1].state = ElementStates.Modified;
-    setNewArr([...arr]);
+    setNewArr(generator.next().value);
     setButtonLoader(DEF_BTN_LOADER);
   };
+
   //пузырьком по увеличению
   const bubbleSortAsc = async (arr: INewArr[]) => {
     setButtonLoader({
@@ -122,29 +129,22 @@ export const SortingPage: React.FC = () => {
       descendensDisabled: true,
       newArrayDisabled: true,
     });
-
     if (arr[0].state !== ElementStates.Default) {
       arr.forEach((item) => (item.state = ElementStates.Default));
     }
-
+    let generator = bubbleSortAscGenerator(arr);
     for (let i = 0; i < arr.length; i++) {
       for (let j = 0; j < arr.length - i - 1; j++) {
-        arr[j].state = ElementStates.Changing;
-        arr[j + 1].state = ElementStates.Changing;
-        setNewArr([...arr]);
+        setNewArr(generator.next().value);
         await delay(TIMER);
-        if (arr[j].item > arr[j + 1].item) {
-          swap(arr, j, j + 1);
-        }
-        arr[j].state = ElementStates.Default;
       }
-      arr[arr.length - i - 1].state = ElementStates.Modified;
     }
-    setNewArr([...arr]);
+    setNewArr(generator.next().value);
     setButtonLoader(DEF_BTN_LOADER);
   };
 
   //пузырьком по уменьшение
+
   const bubbleSortDesc = async (arr: INewArr[]) => {
     setButtonLoader({
       ...buttonLoader,
@@ -152,25 +152,17 @@ export const SortingPage: React.FC = () => {
       ascendensDisabled: true,
       newArrayDisabled: true,
     });
-
     if (arr[0].state !== ElementStates.Default) {
       arr.forEach((item) => (item.state = ElementStates.Default));
     }
-
+    let generator = bubbleSortDescGenerator(arr);
     for (let i = 0; i < arr.length; i++) {
       for (let j = 0; j < arr.length - i - 1; j++) {
-        arr[j].state = ElementStates.Changing;
-        arr[j + 1].state = ElementStates.Changing;
-        setNewArr([...arr]);
+        setNewArr(generator.next().value);
         await delay(TIMER);
-        if (arr[j].item < arr[j + 1].item) {
-          swap(arr, j, j + 1);
-        }
-        arr[j].state = ElementStates.Default;
       }
-      arr[arr.length - i - 1].state = ElementStates.Modified;
     }
-    setNewArr([...arr]);
+    setNewArr(generator.next().value);
     setButtonLoader(DEF_BTN_LOADER);
   };
 
