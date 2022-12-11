@@ -26,6 +26,9 @@ export const FibonacciPage: React.FC = () => {
         //i === item.length - 1 ? setLoader(false) : null;
         series.push(item[i]);
         setState([...series]);
+        if (i === item.length - 1) {
+          setLoader(false);
+        }
       }, TIMER * i);
     }
   };
