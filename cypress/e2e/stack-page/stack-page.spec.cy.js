@@ -82,7 +82,20 @@ describe('Тестирование компонента Стек', () => {
         cy.tick(500);
         cy.get('div[class*="circle_circle"]')
             .eq(0).should('have.css', 'border-color', 'rgb(0, 50, 255)').contains('5');
+        cy.get('input[type="text"]').type('6').should('have.value', '6');
+        cy.get('button[type="submit"]').click();
         cy.tick(500);
+        cy.get('div[class*="circle_circle"]').should('have.length', 2);
+        cy.get('div[class*="circle_circle"]')
+            .eq(0).should('have.css', 'border-color', 'rgb(0, 50, 255)').contains('5');
+        cy.get('div[class*="circle_circle"]')
+            .eq(1).should('have.css', 'border-color', 'rgb(210, 82, 225)').contains('6');
+        cy.tick(500);
+        cy.get('div[class*="circle_circle"]').should('have.length', 2);
+        cy.get('div[class*="circle_circle"]')
+            .eq(0).should('have.css', 'border-color', 'rgb(0, 50, 255)').contains('5');
+        cy.get('div[class*="circle_circle"]')
+            .eq(1).should('have.css', 'border-color', 'rgb(0, 50, 255)').contains('6');
         cy.get('button').contains('Очистить').click();
         cy.tick(500);
         cy.get('div[class*="circle_circle"]').should('have.length', 0);
