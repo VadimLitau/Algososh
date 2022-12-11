@@ -100,6 +100,7 @@ describe('Тестирование компонента Стек', () => {
         cy.tick(500);
         cy.get('div[class*="circle_circle"]').should('have.length', 0);
         cy.get('button[type="submit"]').should('have.disabled');
-        cy.get('button[type="submit"]').should('have.disabled');
+        cy.get('button').contains('Удалить').parent().should('have.disabled');
+        cy.get('button').contains('Очистить').parent().should('have.disabled');
     })
 })
