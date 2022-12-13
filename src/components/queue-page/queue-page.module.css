@@ -1,0 +1,25 @@
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: row;
+}
+
+.input {
+    width: 377px;
+}
+
+.homeForCircles {
+    margin: 48px auto 0;
+    max-width: 944px;
+    min-height: 238px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
